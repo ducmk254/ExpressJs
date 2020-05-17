@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser  = require('body-parser');
 let app = express();
 let port = 3000;
 let users = [
@@ -10,14 +11,16 @@ let users = [
 
 app.set('view engine', 'pug');
 app.set('views','./views');
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 
 app.get('/users/search',(req,res)=>{
     let q = req.query.q;
-    let matchUsers = users.filter((user)=>{
-        return user.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
-    });
-    res.render('users/index',{users:matchUsers});
-    
+        let matchUsers = users.filter((user)=>{
+            return user.name.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+        });
+        res.render('users/index',{users:matchUsers});
 });
 
 
@@ -37,6 +40,15 @@ app.get('/users', (req,res)=>{
         users: users
         });
 })
+
+app.get('/users/create',(req,res)=>{
+    res.render('users/create');
+});
+app.post('/users/create',(req,res)=>{
+    users.push(req.body);
+    res.redirect('/users');
+});
+
 
 app.listen(3000,function(){
     console.log('Server listening on port ' + port);
