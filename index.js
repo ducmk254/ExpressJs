@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser  = require('body-parser');
+
 let app = express();
 let port = 3000;
 let users = [
@@ -11,6 +12,8 @@ let users = [
 
 app.set('view engine', 'pug');
 app.set('views','./views');
+
+
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
@@ -52,4 +55,21 @@ app.post('/users/create',(req,res)=>{
 
 app.listen(3000,function(){
     console.log('Server listening on port ' + port);
+});
+
+
+// Nhận dữ liệu từ phương thức GET: dùng req.params
+app.get('/tintuc/:id',(req,res)=>{ // khai bao bien dai dien :ten_bien_trong_method_get
+    let id = req.params.id; // req.params.ten_bien_trong_method_get
+    res.send('Server đã nhận được request có id = ' + id);
+});
+
+
+
+//Nhận dữ liệu từ phương thức POST : dùng body-parser:
+
+app.post('tintuc',(req,res)=>{
+    let u = req.body.u;
+    let p = req.body.p;
+    res.send('Username: ' + u + ' Password: '+p);
 });
